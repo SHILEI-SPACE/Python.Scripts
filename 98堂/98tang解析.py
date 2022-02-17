@@ -53,7 +53,7 @@ if __name__ == '__main__':
     # Aria2参数设置
     aria2 = aria2p.API(
         aria2p.Client(
-            host="",
+            host="http://127.0.0.1",
             port=6800,
             secret=""
         )

@@ -40,7 +40,7 @@ if __name__ == '__main__':
     # Aria2参数设置
     aria2 = aria2p.API(
         aria2p.Client(
-            host="http://ariang.shilei.space",
+            host="",
             port=6800,
             secret="YuSheng"
         )
