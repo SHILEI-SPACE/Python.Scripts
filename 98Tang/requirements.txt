@@ -1,0 +1,5 @@
+aria2p==0.11.1
+lxml==4.6.3
+pywebio==1.5.2
+requests==2.25.1
+urllib3==1.25.10
