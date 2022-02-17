@@ -1,0 +1,44 @@
+    #  使用for循环方法遍历二级页面url
+    for next_url in next_url_list:
+        #  发送网页请求
+        response_html = requests.get(url=next_url, headers=headers, verify=False)
+        #  网页转码
+        response_html.encoding = 'UTF-8'
+        #  使用xpath提取分页链接
+        data_html = etree.HTML(response_html.text)
+        xpath(data_html)
+
+'''二级页面文章标题与图片链接 xpath解析函数'''
+def xpath(data_html):
+    #  使用xpath提取网页标题与图片链接
+    dir_name = data_html.xpath("//h1[@class='post-title']/text()")[0]
+    img_url_list = data_html.xpath("//div[@data-fancybox='gallery']/@data-src")
+    print(dir_name + '\n',img_url_list)
+
+
+
+
+print(type())
+
+
+    dir_name_a = data_html.xpath("//header/h1[@class='title single-title entry-title']/text()")[0]
+    dir_name = dir_name_a.replace(':','-')
+
+    #  使用for循环方法遍历图片url
+    for img_url_a in img_url_list:
+    #  拼接链接
+        img_url = Referer + img_url_a
+
+    #  删除空格
+    dir_name = dir_name_a.strip()
+
+    #  删除"\n"
+    lines = []
+    with open("url.txt", 'r') as file_to_read:
+    while True:
+        line = file_to_read.readline()
+        if not line:
+            break
+        line = line.strip('\n')
+        lines.append(line)
+    print(lines)
