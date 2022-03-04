@@ -56,7 +56,7 @@ class daili:
     # 5.保存到文件
     def save(self, can_use):
 
-        file = open('IP_List.txt', 'w')
+        file = open('IP_Check.txt', 'w')
         for i in range(len(can_use)):
             s = str(can_use[i]) + '\n'
             file.write(s)
@@ -66,7 +66,7 @@ class daili:
     def run(self):
         proxies_list = []
         # 实现翻页，我这里只爬取了四页（可以修改5所在的数字）
-        for page in range(1, 20):
+        for page in range(1, 3):
             data = self.send_request(page)
             parse_list = self.parse_data(data)
             # 3.获取数据
@@ -79,10 +79,12 @@ class daili:
                 http_type = ' '.join(http_type)
                 ip_num = ' '.join(ip_num)
                 port_num = ' '.join(port_num)
-
-                proxies_dict[http_type] = ip_num + ":" + port_num
-
-                proxies_list.append(proxies_dict)
+                if http_type == 'HTTP':
+                   proxies_dict[http_type] = 'http://' + ip_num + ":" + port_num
+                   proxies_list.append(proxies_dict)
+                else:
+                   proxies_dict[http_type] = 'https://' + ip_num + ":" + port_num
+                   proxies_list.append(proxies_dict)
 
         print("获取到的代理IP数量：", len(proxies_list))
 

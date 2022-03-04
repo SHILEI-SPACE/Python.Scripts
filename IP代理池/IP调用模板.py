@@ -10,7 +10,7 @@ import random
 import requests
 
 # 打开文件，换行读取
-f=open("IP_List.txt","r")
+f=open("IP_Activity.txt","r")
 file = f.readlines()
 
 # 遍历并分别存入列表，方便随机选取IP
@@ -19,11 +19,10 @@ for proxies in file:
     proxies = eval(proxies.replace('\n','')) # 以换行符分割，转换为dict对象
     item.append(proxies)
 
-proxies = random.choice(item)  # 随机选取一个IP
-
-url = 'https://www.baidu.com/'
-headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36'}
-
-response = requests.get(url,headers=headers,proxies=proxies)
-print(response.status_code) # 输出状态码 200，表示访问成功
+while True:
+    proxies = random.choice(item)  # 随机选取一个IP
+    url = 'http://httpbin.org/ip'
+    headers = {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/95.0.4638.69 Safari/537.36'}
+    response = requests.get(url,headers=headers,proxies=proxies)
+    print(response.text) # 输出状态码 200，表示访问成功
 
