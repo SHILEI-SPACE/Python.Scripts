@@ -20,18 +20,14 @@ from lxml import etree
 from pywebio import start_server
 from pywebio.input import input
 from pywebio.output import put_text
-<<<<<<< HEAD
 
 '''获取页面信息'''
-=======
->>>>>>> 55d8cb2be362d1ee1ba4c8ff55489c24a89c3a3a
 def get_index_page(url):
     #  获取网页
     response_html = requests.get(url=url,headers=headers)
     data_html = etree.HTML(response_html.text.encode('UTF-8'))
     #  提取页面信息
     next_page_url = data_html.xpath("//tr/td[@class='num']/a/@href")
-<<<<<<< HEAD
     #  调用get_page函数
     get_page(next_page_url)
 
@@ -74,32 +70,6 @@ def get_page(next_page_url):
             except:
                 #  打印通知消息
                 put_text("*" * 20 + '  任务添加失败！！' + "*" * 20)
-=======
-    get_page(next_page_url)
-
-'''获取页面信息'''
-def get_page(next_page_url):
-    url_base = 'https://rewrfsrewr.xyz/'
-    for url in next_page_url:
-        url = url_base + url
-        #  获取网页
-        response_html = requests.get(url=url,headers=headers)
-        data_html = etree.HTML(response_html.text.encode('UTF-8'))
-        # response_html.encoding = 'UTF-8'
-        #  提取页面信息
-        magnet_url = data_html.xpath("//div[@class='blockcode']//ol/li/text()")[0]
-        page_name = data_html.xpath("//h1[@class='ts']/span/text()")[0]
-        torrent_name = data_html.xpath("//dd/p[@class='attnm']/a/text()")[0]
-        try:
-            #  创建文件夹
-            folder_name = torrent_name.split(".")[0] + '@@' + page_name
-            if not os.path.exists(folder_name):
-                os.mkdir(folder_name)
-            # aria2_download(magnet_url)
-            put_text("*" * 20 + '  任务添加完成！！' + "*" * 20)
-        except:
-            put_text("*" * 20 + '  任务添加失败！！' + "*" * 20)
->>>>>>> 55d8cb2be362d1ee1ba4c8ff55489c24a89c3a3a
 
 '''调用远程aria2添加下载任务'''
 def aria2_download(magnet_url):
@@ -108,11 +78,7 @@ def aria2_download(magnet_url):
 def main():
     #  文章链接
     url = input("请输入链接：")
-<<<<<<< HEAD
     #  执行get_index_page程序
-=======
-    #  执行get_page程序
->>>>>>> 55d8cb2be362d1ee1ba4c8ff55489c24a89c3a3a
     get_index_page(url)
 
 
