@@ -35,16 +35,17 @@ def get_index_page(url):
 '''获取下一页面信息'''
 def get_page(next_page_url):
     #  定义文章url模板
-    url_base = 'https://rewrfsrewr.xyz/'
+    url_base = 'https://rewrfsrewr.xyz/'  #  备用网址   https://xzcfdfsafd.co/
     #  利用For循环与If判断条件排除置顶文章
     for url in next_page_url:
         if     url == 'thread-754956-1-1.html' \
-            or url == 'thread-754954-1-1.html' \
+            or url == 'thread-801246-1-1.html' \
+            or url == 'thread-800760-1-1.html' \
             or url == 'thread-545963-1-1.html' \
             or url == 'thread-532349-1-1.html' \
             or url == 'thread-497590-1-1.html' \
             or url == 'thread-494308-1-1.html' \
-            or url == 'thread-322641-1-1.html':
+            or url == 'thread-322641-1-1.html' :
             print('置顶文章，跳过此任务')
             pass
         else:
