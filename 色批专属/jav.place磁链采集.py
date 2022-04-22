@@ -23,21 +23,30 @@ def get_index_page(url):
     response_html = requests.get(url=url,headers=headers)
     data_html = etree.HTML(response_html.text.encode('UTF-8'))
     #  提取页面信息
-    torrent_url = data_html.xpath("//div[@class='row']/div[@class='col-lg-8 col-xl-9']/a")[0]  #  磁力链接xpath规则
+    torrent_url = data_html.xpath("//div[@class='row']/div[@class='col-lg-8 col-xl-9']/a/@href") [0]  #  磁力链接xpath规则
     page_name = data_html.xpath("//meta[starts-with(@property,'og:title')]/@content")[0]  #  文章名xpath规则
     title = page_name.split(' -')[0]
-    img_url = data_html.xpath("//video[@class='embed-responsive-item']/@poster")
+    img_url = data_html.xpath("//video[@class='embed-responsive-item']/@poster")  #  封面图片xpath规则
     #  调用get_page函数
     get_page(torrent_url,title,img_url)
 
 '''获取下一页面信息'''
 def get_page(torrent_url,title,img_url):
+
+    #  lxml.etree._ElementUnicodeResult转化为字符串str类型
+    torrent_url_str = ''
+    for i in torrent_url:
+        torrent_url_str += str(i)
+
+    img_url_str = ''
+    for i in img_url:
+        img_url_str += str(i)
+
     #  定义文章url模板
     url_base = 'https://jav.place'
-    #  利用For循环与If判断条件排除置顶文章
     #  拼接url
-    url = url_base + torrent_url
-    img_url = url_base + img_url
+    url = url_base + torrent_url_str
+    img_url = url_base + img_url_str
     #  获取网页
     response_html = requests.get(url=url,headers=headers)
     data_html = etree.HTML(response_html.text.encode('UTF-8'))
@@ -51,7 +60,7 @@ def get_page(torrent_url,title,img_url):
         if not os.path.exists(folder_name):
             os.mkdir(folder_name)
         #  调用aria2_download函数
-        aria2_download(magnet_url)
+        # aria2_download(magnet_url)
         #  调用save_data函数
         save_data(folder_name, img_url)
         #  打印通知消息
