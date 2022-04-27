@@ -22,8 +22,9 @@ def get_index_page(url):
     #  提取页面信息
     torrent_url = data_html.xpath("//div[@class='row']/div[@class='col-lg-8 col-xl-9']/a/@href") [0]  #  磁力链接xpath规则
     page_name = data_html.xpath("//meta[starts-with(@property,'og:title')]/@content")[0]  #  文章名xpath规则
-    title = page_name.split(' -')[0]
-    img_url = data_html.xpath("//video[@class='embed-responsive-item']/@poster")  #  封面图片xpath规则
+    #  分割文章名，提取番号
+    title = page_name.split(' ')[0]
+    img_url = data_html.xpath("//meta[starts-with(@property,'og:image')]/@content")[0] #  封面图片xpath规则
     #  调用get_page函数
     get_page(torrent_url,title,img_url)
 
@@ -57,10 +58,10 @@ def get_page(torrent_url,title,img_url):
         #  创建文件夹
         if not os.path.exists(folder_name):
             os.mkdir(folder_name)
-        #  调用aria2_download函数
-        aria2_download(magnet_url)
         #  调用save_data函数
         save_data(folder_name, img_url)
+        #  调用aria2_download函数
+        # aria2_download(magnet_url)
         #  打印通知消息
         print("*" * 20 + '  任务添加完成！！' + "*" * 20)
     except:
