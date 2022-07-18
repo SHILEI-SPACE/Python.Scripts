@@ -1,57 +1,97 @@
 # !/usr/bin/env python3
 # -*- coding: utf-8 -*-
-# @Time : 2022/1/21 13:48
+# @Time : 2022/4/26 12:24
 # @Author : 石磊.SHILEI
 # @Email : a.shilei.space@gmail.com
-# @File : 2048 磁力链采集.py
+# @File : ※核基地※日本有碼精选.py
 # @Software: PyCharm
 
 import requests
 import urllib3
-import aria2p
 import random
+import aria2p
 import re
+from lxml import etree
 
+'''获取一级页面信息'''
+def get_page(url):
+    response_html = requests.get(url=url,headers=headers)
+    response_html.encoding = 'UTF-8'
+    #  使用xpath提取页面信息
+    data_html = etree.HTML(response_html.text)
+    torrent_page_url = data_html.xpath("//div[@class='tpc_content']//a[@target='_blank']/text()")
+    img_url_list = data_html.xpath("//ignore_js_op[@class='att_img']/img/@src")
+    page_contect = data_html.xpath("//div[@class='tpc_content']/div[@id='read_tpc']/text()")
+    title_str = ''
+    for i in page_contect:
+        title_str += str(i)
+    title_list = re.findall('【影片名称】：(.*?)【影片格式】', title_str)
+    #  调用get_torrrent_page函数
+    get_torrrent_page(torrent_page_url,title_list)
+    #  调用save_img函数
+    save_img(img_url_list)
 
-'''获取页面信息'''
-def get_page_data(url):
-    response_html = requests.get(url=url)
-    #  使用正则表达式提取磁力链接
-    magnet_url = re.findall('href="(.*?)">', response_html.text)[2]
-    aria2_download(magnet_url)
+'''获取二级页面信息'''
+def get_torrrent_page(torrent_page_url,title_list):
+    #  定义变量i
+    i = 1
+    #  for循环遍历torrent_page_url
+    for url in torrent_page_url:
+        #  按顺序读取title_list数值
+        title = title_list[i]
+        response_html_b = requests.get(url=url)
+        #  使用正则表达式提取磁力链接
+        magnet_url = re.findall('href="(.*?)">', response_html_b.text)[2]
+        #  调用aria2_download函数
+        # aria2_download(magnet_url)
+        #  打印通知
+        print('----------已添加《%s》下载任务----------' % title)
+        #  变量i自增
+        i += 1
 
 '''调用远程aria2添加下载任务'''
 def aria2_download(magnet_url):
     aria2.add_magnet(magnet_url)
 
+'''保存图片'''
+def save_img(img_url_list):
+    #  for循环遍历img_url_list
+    for img_url in img_url_list:
+        #  定义筛选条件
+        a = "mp4"
+        b = a in img_url
+        #  使用if判断条件排除不需要的图片链接
+        if b == True:
+            pass
+        else:
+            #  分割图片名
+            filename = img_url.split('/')[-1]
+            #  发送图片下载请求
+            img = requests.get(img_url,headers=headers,verify=False)
+            #  打开文件夹
+            f = open(filename, 'wb')
+            #  下载写入图片
+            f.write(img.content)
+            #  关闭文件夹
+            f.close()
+            #  打印通知
+            print('----------《%s》下载完成----------' % filename)
 
 def main():
-    # 打开文件，换行读取
-    f = open("url_list.txt", "r")
-    file = f.readlines()
-
-    # 遍历并分别存入列表，方便随机选取URL
-    url_item = []
-    for url in file:
-        url = url.replace('\n', '')  # 以换行符分割
-        url_item.append(url)
-    i = 1
-    #  遍历url
-    for url in url_item:
-    #  执行get_page_data程序
-        get_page_data(url)
-        print('第%s个URL添加完成' %i)
-        i += 1
-
+    #  文章链接
+    # url = input("请输入链接：")
+    url = 'https://hp.g2ca.life/2048/state/p/3/2205/6215484.html'
+    #  执行get_page程序
+    get_page(url)
 
 if __name__ == '__main__':
     urllib3.disable_warnings()
     # Aria2参数设置
     aria2 = aria2p.API(
         aria2p.Client(
-            host="http://ariang.shilei.space",
+            host="http://127.0.0.1",
             port=6800,
-            secret="YuSheng"
+            secret=""
         )
     )
     #  伪装头列表
@@ -75,5 +115,5 @@ if __name__ == '__main__':
     ]
     #  随机调用User-Agent
     headers = {'User-Agent': random.choice(headers_list)}
+    #  执行main程序
     main()
-
